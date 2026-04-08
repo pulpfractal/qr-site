@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACCC Access Gateway</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .model-text {
+      white-space: pre-wrap;
+      line-height: 1.7;
+    }
+
+    .outlook-shell {
+      background: #f4f6f8;
+      color: #222;
+      border-radius: 14px;
+      border: 1px solid #d7dce2;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
+    }
+
+    .outlook-titlebar {
+      background: #eef1f5;
+      border-bottom: 1px solid #d7dce2;
+      padding: 0.8rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #4b5563;
+    }
+
+    .outlook-toolbar {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      padding: 0.9rem 1rem 0.6rem;
+      font-size: 0.92rem;
+      color: #4b5563;
+      border-bottom: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .fake-radio {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .fake-radio .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 2px solid #3b82f6;
+      display: inline-block;
+      position: relative;
+    }
+
+    .fake-radio.selected .dot::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      background: #3b82f6;
+      border-radius: 50%;
+    }
+
+    .outlook-body {
+      padding: 1rem;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr 44px 44px;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-row input,
+    .addr-input {
+      width: 100%;
+      padding: 0.75rem 0.8rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.96rem;
+      background: white;
+      color: #111827;
+      box-sizing: border-box;
+    }
+
+    .mini-btn,
+    .book-btn,
+    .cancel-btn {
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: #374151;
+      border-radius: 8px;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .mini-btn {
+      font-size: 1.1rem;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .list-panel,
+    .entry-panel {
+      border: 1px solid #dbe3ea;
+      border-radius: 10px;
+      background: white;
+      overflow: hidden;
+    }
+
+    .list-header,
+    .entry-header {
+      background: #f8fafc;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0.7rem 0.8rem;
+      font-size: 0.88rem;
+      color: #4b5563;
+      display: grid;
+      grid-template-columns: 1.2fr 0.7fr 1fr;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
+
+    .list-row {
+      display: grid;
+      grid-template-columns: 1.2fr 0.7fr 1fr;
+      gap: 0.5rem;
+      padding: 0.85rem 0.8rem;
+      font-size: 0.95rem;
+      border-top: 1px solid #f1f5f9;
+      cursor: pointer;
+    }
+
+    .list-row.active {
+      background: #0a64d8;
+      color: white;
+    }
+
+    .entry-panel-inner {
+      padding: 0.9rem;
+    }
+
+    .addr-row {
+      display: grid;
+      grid-template-columns: 68px 1fr;
+      gap: 0.7rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .addr-label {
+      font-weight: 600;
+      color: #4b5563;
+      font-size: 0.95rem;
+    }
+
+    .outlook-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.7rem;
+      padding: 1rem;
+      border-top: 1px solid #e5e7eb;
+      background: #f8fafc;
+    }
+
+    .book-btn,
+    .cancel-btn {
+      padding: 0.7rem 1rem;
+      min-width: 100px;
+    }
+
+    .book-btn {
+      background: #0a64d8;
+      border-color: #0a64d8;
+      color: white;
+    }
+
+    .book-btn:hover {
+      filter: brightness(0.97);
+    }
+
+    .cancel-btn:hover,
+    .mini-btn:hover {
+      background: #f8fafc;
+    }
+
+    .helper-text {
+      margin-top: 0.8rem;
+      font-size: 0.92rem;
+      color: #475569;
+    }
+
+    .feedback-light {
+      margin-top: 0.9rem;
+      min-height: 1.2em;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .feedback-light.error {
+      color: #b91c1c;
+    }
+
+    .feedback-light.success {
+      color: #166534;
+    }
+
+    @media (max-width: 900px) {
+      .columns {
+        grid-template-columns: 1fr;
+      }
+
+      .list-header,
+      .list-row {
+        grid-template-columns: 1fr 0.8fr 1fr;
+        font-size: 0.88rem;
+      }
+
+      .addr-row {
+        grid-template-columns: 52px 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <main class="container">
+    <header class="panel hero compact">
+      <p class="eyebrow">UNSANCTIONED MODEL ADVISORY</p>
+      <h1>Prediction Model Intercept</h1>
+      <p class="lede">A scheduling instruction has been inserted into the internal booking workflow.</p>
+    </header>
+
+    <section class="panel">
+      <div class="data-card mono model-text">
+[forecast anomaly // internal administrative channel]<br><br>
+"the commissioners still believe the room is benign"<br>
+"they continue to reserve the table through ordinary systems"<br>
+"ordinary systems can be repurposed"<br>
+"send the request where it always begins"<br>
+"copy the office that oversees the seat of instruction"<br>
+"do this quietly"<br>
+"do not interrupt the simulation"
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="outlook-shell">
+        <div class="outlook-titlebar">Select Names: Global Address List</div>
+
+        <div class="outlook-toolbar">
+          <div class="radio-group">
+            <span class="fake-radio selected"><span class="dot"></span>More columns</span>
+            <span class="fake-radio"><span class="dot"></span>Name only</span>
+          </div>
+          <strong>Address Book:</strong>
+          <span>Global Address List</span>
+        </div>
+
+        <div class="outlook-body">
+          <div class="search-row">
+            <input type="text" value="pool" aria-label="Search" />
+            <button class="mini-btn" type="button">+</button>
+            <button class="mini-btn" type="button">×</button>
+          </div>
+
+          <div class="columns">
+            <div class="list-panel">
+              <div class="list-header">
+                <div>Name</div>
+                <div>Type</div>
+                <div>Department</div>
+              </div>
+
+              <div class="list-row active">
+                <div>Pool Table Booking</div>
+                <div>MS</div>
+                <div>Facilities Coordination</div>
+              </div>
+            </div>
+
+            <div class="entry-panel">
+              <div class="entry-panel-inner">
+                <div class="addr-row">
+                  <div class="addr-label">To</div>
+                  <input id="toField" class="addr-input" type="text" placeholder="Enter recipient" />
+                </div>
+
+                <div class="addr-row">
+                  <div class="addr-label">Cc</div>
+                  <input id="ccField" class="addr-input" type="text" placeholder="Enter office location" />
+                </div>
+
+                <div class="addr-row">
+                  <div class="addr-label">Bcc</div>
+                  <input class="addr-input" type="text" placeholder="" />
+                </div>
+
+                <p class="helper-text">
+                  Use the model’s instruction to complete the routing. Send to the booking entry and copy the ACCC office in the national capital.
+                </p>
+
+                <p id="feedback" class="feedback-light" aria-live="polite"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="outlook-actions">
+          <button class="cancel-btn" type="button">Cancel</button>
+          <button id="bookBtn" class="book-btn" type="button">OK</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const toField = document.getElementById("toField");
+    const ccField = document.getElementById("ccField");
+    const bookBtn = document.getElementById("bookBtn");
+    const feedback = document.getElementById("feedback");
+
+    function normalise(value) {
+      return String(value).toLowerCase().trim().replace(/\s+/g, " ");
+    }
+
+    function checkRouting() {
+      const toValue = normalise(toField.value);
+      const ccValue = normalise(ccField.value);
+
+      const toOk = toValue === "pool table booking";
+      const ccOk = ccValue === "canberra";
+
+      if (toOk && ccOk) {
+        feedback.textContent = "Routing accepted.";
+        feedback.classList.remove("error");
+        feedback.classList.add("success");
+
+        setTimeout(function () {
+          window.location.href = "intro.html";
+        }, 700);
+      } else {
+        feedback.textContent = "Routing failed. Check the booking destination and copied office.";
+        feedback.classList.remove("success");
+        feedback.classList.add("error");
+      }
+    }
+
+    bookBtn.addEventListener("click", checkRouting);
+
+    [toField, ccField].forEach(function (el) {
+      el.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          checkRouting();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
