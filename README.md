@@ -1,2 +1,0 @@
-# qr-site
-arg draft
