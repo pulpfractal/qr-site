@@ -28,12 +28,14 @@
       display: none;
     }
 
-    .continue-wrap {
+    .continue-wrap,
+    .start-wrap {
       margin-top: 1.5rem;
       text-align: center;
     }
 
-    .continue-btn {
+    .continue-btn,
+    .start-btn {
       padding: 0.8rem 1.2rem;
       border: 1px solid #7ee7d8;
       background: transparent;
@@ -44,65 +46,10 @@
       text-transform: uppercase;
     }
 
-    .continue-btn:hover {
+    .continue-btn:hover,
+    .start-btn:hover {
       opacity: 0.85;
       box-shadow: 0 0 12px rgba(126, 231, 216, 0.25);
-    }
-
-    .glitch {
-      position: relative;
-      display: inline-block;
-    }
-
-    .glitch::before,
-    .glitch::after {
-      content: attr(data-text);
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .glitch::before {
-      transform: translate(-1px, 0);
-      opacity: 0.35;
-      animation: glitchTop 2.2s infinite linear alternate-reverse;
-    }
-
-    .glitch::after {
-      transform: translate(1px, 0);
-      opacity: 0.25;
-      animation: glitchBottom 1.7s infinite linear alternate-reverse;
-    }
-
-    @keyframes glitchTop {
-      0% { clip-path: inset(0 0 85% 0); }
-      10% { clip-path: inset(10% 0 70% 0); }
-      20% { clip-path: inset(80% 0 5% 0); }
-      30% { clip-path: inset(30% 0 45% 0); }
-      40% { clip-path: inset(65% 0 15% 0); }
-      50% { clip-path: inset(20% 0 55% 0); }
-      60% { clip-path: inset(75% 0 10% 0); }
-      70% { clip-path: inset(40% 0 35% 0); }
-      80% { clip-path: inset(5% 0 80% 0); }
-      90% { clip-path: inset(55% 0 20% 0); }
-      100% { clip-path: inset(0 0 85% 0); }
-    }
-
-    @keyframes glitchBottom {
-      0% { clip-path: inset(85% 0 0 0); }
-      10% { clip-path: inset(60% 0 15% 0); }
-      20% { clip-path: inset(15% 0 65% 0); }
-      30% { clip-path: inset(45% 0 30% 0); }
-      40% { clip-path: inset(5% 0 80% 0); }
-      50% { clip-path: inset(70% 0 10% 0); }
-      60% { clip-path: inset(35% 0 40% 0); }
-      70% { clip-path: inset(80% 0 5% 0); }
-      80% { clip-path: inset(25% 0 50% 0); }
-      90% { clip-path: inset(55% 0 20% 0); }
-      100% { clip-path: inset(85% 0 0 0); }
     }
 
     .flicker {
@@ -138,23 +85,23 @@
 
   <main class="container flicker">
     <header class="panel hero">
-      <p class="eyebrow glitch" data-text="UNAUTHORISED OUTPUT DETECTED">
-        UNAUTHORISED OUTPUT DETECTED
-      </p>
-      <h1 class="glitch" data-text="Predictive Model Transmission">
-        Predictive Model Transmission
-      </h1>
+      <p class="eyebrow">UNAUTHORISED OUTPUT DETECTED</p>
+      <h1>Predictive Model Transmission</h1>
       <p class="lede">
         A message has been generated outside approved ACCC forecasting parameters.
       </p>
     </header>
 
     <section class="panel">
-      <p class="mono warning-text glitch" data-text="WARNING: OUTPUT STREAM OPEN">
+      <p class="mono warning-text">
         WARNING: OUTPUT STREAM OPEN
       </p>
 
       <div id="terminal" class="data-card mono terminal-text"></div>
+
+      <div id="startWrap" class="start-wrap">
+        <button id="startBtn" class="start-btn">Tap to Begin</button>
+      </div>
 
       <div id="continueWrap" class="continue-wrap hidden">
         <button class="continue-btn" onclick="window.location.href='puzzle1.html'">
@@ -164,7 +111,7 @@
     </section>
   </main>
 
-  <audio id="typingAudio" preload="auto" loop>
+  <audio id="typingAudio" preload="auto" playsinline>
     <source src="typing.mp3" type="audio/mpeg" />
   </audio>
 
@@ -190,36 +137,38 @@
 
     const terminal = document.getElementById("terminal");
     const continueWrap = document.getElementById("continueWrap");
+    const startWrap = document.getElementById("startWrap");
+    const startBtn = document.getElementById("startBtn");
     const typingAudio = document.getElementById("typingAudio");
 
     let lineIndex = 0;
     let charIndex = 0;
     let currentText = "";
-    let isTypingStarted = false;
-
-    function startTypingAudio() {
-      if (isTypingStarted) return;
-      isTypingStarted = true;
-
-      typingAudio.volume = 0.25;
-      typingAudio.play().catch(() => {
-        // Browser may block autoplay until user interaction.
-      });
-    }
-
-    function stopTypingAudio() {
-      typingAudio.pause();
-      typingAudio.currentTime = 0;
-    }
+    let audioEnabled = false;
 
     function renderText() {
       terminal.innerHTML = currentText + '<span class="cursor">|</span>';
     }
 
+    function tryStartAudio() {
+      typingAudio.volume = 0.12;
+      typingAudio.currentTime = 0;
+      typingAudio.play().then(() => {
+        audioEnabled = true;
+      }).catch(() => {
+        audioEnabled = false;
+      });
+    }
+
+    function stopAudio() {
+      typingAudio.pause();
+      typingAudio.currentTime = 0;
+    }
+
     function typeLine() {
       if (lineIndex >= lines.length) {
         renderText();
-        stopTypingAudio();
+        stopAudio();
         continueWrap.classList.remove("hidden");
         return;
       }
@@ -227,7 +176,6 @@
       const currentLine = lines[lineIndex];
 
       if (charIndex < currentLine.length) {
-        startTypingAudio();
         currentText += currentLine.charAt(charIndex);
         charIndex++;
         renderText();
@@ -243,14 +191,11 @@
       }
     }
 
-    document.addEventListener("click", function initAudioOnce() {
-      startTypingAudio();
-      typingAudio.pause();
-      typingAudio.currentTime = 0;
-      document.removeEventListener("click", initAudioOnce);
+    startBtn.addEventListener("click", function () {
+      startWrap.classList.add("hidden");
+      tryStartAudio();
+      typeLine();
     });
-
-    typeLine();
   </script>
 </body>
 </html>
