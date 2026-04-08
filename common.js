@@ -47,7 +47,7 @@ function setupPuzzle(config) {
       feedback.classList.add("success");
       feedback.classList.remove("error");
 
-      setTimeout(() => {
+      setTimeout(function () {
         window.location.href = config.nextPage;
       }, 800);
     } else {
