@@ -1,71 +1,67 @@
-const STORAGE_KEY = 'accc-arg-keywords';
+function setupPuzzle(config) {
+  const input = document.getElementById(config.inputEl);
+  const submit = document.getElementById(config.submitEl);
+  const feedback = document.getElementById(config.feedbackEl);
 
-function normaliseAnswer(value) {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, ' ');
-}
-
-function getStoredKeywords() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch (error) {
-    return [];
+  if (!input || !submit || !feedback) {
+    console.error("Puzzle setup failed: missing element(s).");
+    return;
   }
-}
 
-function storeKeyword(keyword) {
-  if (!keyword) return;
-  const keywords = getStoredKeywords();
-  if (!keywords.includes(keyword)) {
-    keywords.push(keyword);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(keywords));
+  function defaultNormalize(value) {
+    return String(value)
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "_");
   }
-}
 
-function setupPuzzle({ acceptedAnswers, nextPage, keyword, feedbackEl, inputEl, submitEl, onSuccess }) {
-  const feedback = document.getElementById(feedbackEl);
-  const input = document.getElementById(inputEl);
-  const submit = document.getElementById(submitEl);
+  const normalize =
+    typeof config.normalize === "function"
+      ? config.normalize
+      : defaultNormalize;
 
-  function handleSubmit() {
-    const value = normaliseAnswer(input.value);
-    const isCorrect = acceptedAnswers.map(normaliseAnswer).includes(value);
+  const acceptedAnswers = (config.acceptedAnswers || []).map(normalize);
 
-    if (!value) {
-      feedback.textContent = 'Enter an answer to continue.';
-      feedback.className = 'feedback error';
-      return;
+  function saveKeyword(keyword) {
+    if (!keyword) return;
+
+    let keywords = [];
+    try {
+      keywords = JSON.parse(localStorage.getItem("accc_keywords") || "[]");
+    } catch (e) {
+      keywords = [];
     }
 
-    if (isCorrect) {
-      storeKeyword(keyword);
-      feedback.innerHTML = keyword
-        ? `Correct. Keyword recovered: <span class="mono">${keyword}</span>`
-        : 'Correct. Final layer unlocked.';
-      feedback.className = 'feedback success';
-
-      if (typeof onSuccess === 'function') {
-        onSuccess();
-      }
-
-      if (nextPage) {
-        setTimeout(() => {
-          window.location.href = nextPage;
-        }, 1200);
-      }
-      return;
+    if (!keywords.includes(keyword)) {
+      keywords.push(keyword);
+      localStorage.setItem("accc_keywords", JSON.stringify(keywords));
     }
-
-    feedback.textContent = 'Incorrect. Review the evidence and try again.';
-    feedback.className = 'feedback error';
   }
 
-  submit.addEventListener('click', handleSubmit);
-  input.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      handleSubmit();
+  function checkAnswer() {
+    const userAnswer = normalize(input.value);
+
+    if (acceptedAnswers.includes(userAnswer)) {
+      saveKeyword(config.keyword);
+      feedback.textContent = "Access granted.";
+      feedback.classList.add("success");
+      feedback.classList.remove("error");
+
+      setTimeout(() => {
+        window.location.href = config.nextPage;
+      }, 800);
+    } else {
+      feedback.textContent = "Incorrect. Check the transformation and try again.";
+      feedback.classList.add("error");
+      feedback.classList.remove("success");
+    }
+  }
+
+  submit.addEventListener("click", checkAnswer);
+
+  input.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      checkAnswer();
     }
   });
 }
