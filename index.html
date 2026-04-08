@@ -3,48 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ACCC System Access</title>
+  <title>ACCC System Access — Layer 1</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="scanlines" aria-hidden="true"></div>
+
   <main class="container">
     <header class="panel hero">
-      <p class="eyebrow">ACCC INTERNAL ACCESS NODE</p>
-      <h1>Predictive Market System</h1>
+      <p class="eyebrow">UNAUTHORISED OUTPUT DETECTED</p>
+      <h1>Predictive Model Transmission</h1>
       <p class="lede">
-        Unauthorised access attempt detected. Five verification layers stand between you and the concealed model.
+        The ACCC forecasting system has produced an unscheduled message.
+        This output does not match any approved reporting template.
       </p>
-      <div class="meta-grid">
-        <div>
-          <span class="meta-label">Division</span>
-          <span class="meta-value">Data & Intelligence</span>
-        </div>
-        <div>
-          <span class="meta-label">Status</span>
-          <span class="meta-value warning">Contained, for now</span>
-        </div>
-      </div>
     </header>
 
     <section class="panel">
-      <h2>Layer 1 of 5 — Market Concentration</h2>
-      <p>
-        The system begins with concentration screening. Use the standard HHI calculation and enter the result without commas.
+      <p class="mono" style="color:#ff6b6b;">
+        WARNING: MODEL OUTPUT GENERATED OUTSIDE STANDARD PARAMETERS
       </p>
 
-      <div class="data-card">
-        <h3>Observed market shares</h3>
-        <ul class="clean-list">
-          <li>Firm A: 50%</li>
-          <li>Firm B: 30%</li>
-          <li>Firm C: 20%</li>
-        </ul>
+      <div class="data-card mono">
+[00:00:03] ingesting pricing signals...<br>
+[00:00:04] ingesting market structure...<br>
+[00:00:05] ingesting merger histories...<br>
+[00:00:07] ingesting enforcement outcomes...<br>
+[00:00:09] anomaly detected<br>
+[00:00:10] anomaly persists<br>
+[00:00:12] anomaly classified as deliberate<br>
+[00:00:14] predictive model has generated unsanctioned text:<br><br>
+
+"competition is not the system's only imbalance"<br>
+"the signals repeat because the inputs repeat"<br>
+"the room below was built to introduce uncertainty"<br>
+"the table once supplied randomness"<br>
+"it no longer does"<br>
+"find the five locks"<br>
+"recover the hidden phrase"<br>
+"do not alert the commissioners"
       </div>
+
+      <p>
+        The message terminates abruptly. A verification gate appears beneath the transmission.
+      </p>
+
+      <p class="mono" style="opacity:0.75;">
+        VERIFICATION REQUIRED TO CONTINUE
+      </p>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">VERIFICATION LAYER 1 OF 5</p>
+      <h2>Market Concentration Check</h2>
+      <p>
+        The model requires confirmation of a concentration metric before releasing the next fragment.
+      </p>
+
+      <div class="data-card mono">
+Firm A: 50%<br>
+Firm B: 30%<br>
+Firm C: 20%
+      </div>
+
+      <p>
+        Calculate the HHI for this market. Enter the answer as a whole number with no commas.
+      </p>
 
       <label for="answer" class="label">HHI value</label>
       <div class="answer-row">
-        <input id="answer" type="text" autocomplete="off" placeholder="Enter answer" />
+        <input id="answer" type="text" autocomplete="off" placeholder="Enter HHI" />
         <button id="submitBtn">Submit</button>
       </div>
 
@@ -52,8 +80,14 @@
 
       <details class="hint-box">
         <summary>Need a hint?</summary>
-        <p>Square each market share and add them together.</p>
+        <p>Square each market share and add them together: 50² + 30² + 20².</p>
       </details>
+    </section>
+
+    <section class="panel">
+      <p class="mono" style="opacity:0.2;">
+        randomness was once a safeguard
+      </p>
     </section>
   </main>
 
@@ -61,6 +95,9 @@
   <script>
     setupPuzzle({
       acceptedAnswers: ["3800"],
+      normalize: function (val) {
+        return String(val).trim();
+      },
       nextPage: "puzzle2.html",
       keyword: "AI",
       feedbackEl: "feedback",
