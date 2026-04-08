@@ -52,28 +52,6 @@
       box-shadow: 0 0 12px rgba(126, 231, 216, 0.25);
     }
 
-    .flicker {
-      animation: flicker 5s infinite;
-    }
-
-    @keyframes flicker {
-      0%, 18%, 22%, 62%, 64%, 100% {
-        opacity: 1;
-      }
-      19%, 21%, 63% {
-        opacity: 0.82;
-      }
-      35% {
-        opacity: 0.92;
-      }
-      36% {
-        opacity: 0.78;
-      }
-      37% {
-        opacity: 1;
-      }
-    }
-
     .warning-text {
       color: #ff6b6b;
       margin-bottom: 1rem;
@@ -83,7 +61,7 @@
 <body>
   <div class="scanlines" aria-hidden="true"></div>
 
-  <main class="container flicker">
+  <main class="container">
     <header class="panel hero">
       <p class="eyebrow">UNAUTHORISED OUTPUT DETECTED</p>
       <h1>Predictive Model Transmission</h1>
