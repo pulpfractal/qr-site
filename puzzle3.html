@@ -1,51 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ACCC System Access — Layer 3</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <div class="scanlines" aria-hidden="true"></div>
-  <main class="container">
-    <header class="panel hero compact">
-      <p class="eyebrow">VERIFICATION LAYER 3 OF 5</p>
-      <h1>Data Cleaning Protocol</h1>
-      <p class="lede">The model will not continue until the identifier is standardised.</p>
-    </header>
+<section class="panel">
+  <p>The ACCC data ingestion pipeline has failed during transformation.</p>
 
-    <section class="panel">
-      <div class="data-card mono big-code">DAHUA-HD-424-XYZ</div>
-      <p>
-        Remove the brand prefix and isolate the first product segment between dashes.
-      </p>
+  <div class="data-card mono">
+model, mpg, cyl  
+Mazda RX4, 21.0, 6  
+Mazda RX4 Wag, 21.0, 6  
+Datsun 710, 22.8, 4  
+Hornet 4 Drive, 21.4, 6  
+Hornet Sportabout, 18.7, 8  
+  </div>
 
-      <label for="answer" class="label">Cleaned code segment</label>
-      <div class="answer-row">
-        <input id="answer" type="text" autocomplete="off" placeholder="Enter code" />
-        <button id="submitBtn">Submit</button>
-      </div>
+  <p>The pipeline attempted to standardise the <strong>model</strong> column:</p>
 
-      <p id="feedback" class="feedback" aria-live="polite"></p>
+  <div class="data-card mono">
+cleaned <- df %>%
+  mutate(
+    model = model %>%
+      tolower() %>%
+      gsub(" ", "_", .)
+  )
+  </div>
 
-      <details class="hint-box">
-        <summary>Need a hint?</summary>
-        <p>Ignore DAHUA. Return only the next segment before the following dash.</p>
-      </details>
-    </section>
-  </main>
+  <p>
+    The transformation succeeded, but the system lost the output.
+  </p>
 
-  <script src="common.js"></script>
-  <script>
-    setupPuzzle({
-      acceptedAnswers: ["hd"],
-      nextPage: "puzzle4.html",
-      keyword: "ESCAPE",
-      feedbackEl: "feedback",
-      inputEl: "answer",
-      submitEl: "submitBtn"
-    });
-  </script>
-</body>
-</html>
+  <p>
+    What is the cleaned value of:<br>
+    <strong>Hornet Sportabout</strong>?
+  </p>
+
+  <label for="answer" class="label">Recovered value</label>
+  <div class="answer-row">
+    <input id="answer" type="text" autocomplete="off" placeholder="Enter cleaned value" />
+    <button id="submitBtn">Submit</button>
+  </div>
+
+  <p id="feedback" class="feedback" aria-live="polite"></p>
+
+  <details class="hint-box">
+    <summary>Need a hint?</summary>
+    <p>Follow the pipeline step by step: lowercase → replace spaces with underscores</p>
+  </details>
+</section>
