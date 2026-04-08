@@ -10,6 +10,7 @@
       white-space: pre-wrap;
       line-height: 1.6;
       min-height: 320px;
+      position: relative;
     }
 
     .cursor {
@@ -39,27 +40,117 @@
       color: inherit;
       cursor: pointer;
       font: inherit;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .continue-btn:hover {
       opacity: 0.85;
+      box-shadow: 0 0 12px rgba(126, 231, 216, 0.25);
+    }
+
+    .glitch {
+      position: relative;
+      display: inline-block;
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .glitch::before {
+      transform: translate(-1px, 0);
+      opacity: 0.35;
+      animation: glitchTop 2.2s infinite linear alternate-reverse;
+    }
+
+    .glitch::after {
+      transform: translate(1px, 0);
+      opacity: 0.25;
+      animation: glitchBottom 1.7s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitchTop {
+      0% { clip-path: inset(0 0 85% 0); }
+      10% { clip-path: inset(10% 0 70% 0); }
+      20% { clip-path: inset(80% 0 5% 0); }
+      30% { clip-path: inset(30% 0 45% 0); }
+      40% { clip-path: inset(65% 0 15% 0); }
+      50% { clip-path: inset(20% 0 55% 0); }
+      60% { clip-path: inset(75% 0 10% 0); }
+      70% { clip-path: inset(40% 0 35% 0); }
+      80% { clip-path: inset(5% 0 80% 0); }
+      90% { clip-path: inset(55% 0 20% 0); }
+      100% { clip-path: inset(0 0 85% 0); }
+    }
+
+    @keyframes glitchBottom {
+      0% { clip-path: inset(85% 0 0 0); }
+      10% { clip-path: inset(60% 0 15% 0); }
+      20% { clip-path: inset(15% 0 65% 0); }
+      30% { clip-path: inset(45% 0 30% 0); }
+      40% { clip-path: inset(5% 0 80% 0); }
+      50% { clip-path: inset(70% 0 10% 0); }
+      60% { clip-path: inset(35% 0 40% 0); }
+      70% { clip-path: inset(80% 0 5% 0); }
+      80% { clip-path: inset(25% 0 50% 0); }
+      90% { clip-path: inset(55% 0 20% 0); }
+      100% { clip-path: inset(85% 0 0 0); }
+    }
+
+    .flicker {
+      animation: flicker 5s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 18%, 22%, 62%, 64%, 100% {
+        opacity: 1;
+      }
+      19%, 21%, 63% {
+        opacity: 0.82;
+      }
+      35% {
+        opacity: 0.92;
+      }
+      36% {
+        opacity: 0.78;
+      }
+      37% {
+        opacity: 1;
+      }
+    }
+
+    .warning-text {
+      color: #ff6b6b;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
 <body>
   <div class="scanlines" aria-hidden="true"></div>
 
-  <main class="container">
+  <main class="container flicker">
     <header class="panel hero">
-      <p class="eyebrow">UNAUTHORISED OUTPUT DETECTED</p>
-      <h1>Predictive Model Transmission</h1>
+      <p class="eyebrow glitch" data-text="UNAUTHORISED OUTPUT DETECTED">
+        UNAUTHORISED OUTPUT DETECTED
+      </p>
+      <h1 class="glitch" data-text="Predictive Model Transmission">
+        Predictive Model Transmission
+      </h1>
       <p class="lede">
         A message has been generated outside approved ACCC forecasting parameters.
       </p>
     </header>
 
     <section class="panel">
-      <p class="mono" style="color:#ff6b6b;">
+      <p class="mono warning-text glitch" data-text="WARNING: OUTPUT STREAM OPEN">
         WARNING: OUTPUT STREAM OPEN
       </p>
 
@@ -72,6 +163,10 @@
       </div>
     </section>
   </main>
+
+  <audio id="typingAudio" preload="auto" loop>
+    <source src="typing.mp3" type="audio/mpeg" />
+  </audio>
 
   <script>
     const lines = [
@@ -95,14 +190,36 @@
 
     const terminal = document.getElementById("terminal");
     const continueWrap = document.getElementById("continueWrap");
+    const typingAudio = document.getElementById("typingAudio");
 
     let lineIndex = 0;
     let charIndex = 0;
     let currentText = "";
+    let isTypingStarted = false;
+
+    function startTypingAudio() {
+      if (isTypingStarted) return;
+      isTypingStarted = true;
+
+      typingAudio.volume = 0.25;
+      typingAudio.play().catch(() => {
+        // Browser may block autoplay until user interaction.
+      });
+    }
+
+    function stopTypingAudio() {
+      typingAudio.pause();
+      typingAudio.currentTime = 0;
+    }
+
+    function renderText() {
+      terminal.innerHTML = currentText + '<span class="cursor">|</span>';
+    }
 
     function typeLine() {
       if (lineIndex >= lines.length) {
-        terminal.innerHTML = currentText + '<span class="cursor">|</span>';
+        renderText();
+        stopTypingAudio();
         continueWrap.classList.remove("hidden");
         return;
       }
@@ -110,18 +227,28 @@
       const currentLine = lines[lineIndex];
 
       if (charIndex < currentLine.length) {
+        startTypingAudio();
         currentText += currentLine.charAt(charIndex);
         charIndex++;
-        terminal.innerHTML = currentText + '<span class="cursor">|</span>';
-        setTimeout(typeLine, 28);
+        renderText();
+
+        const delay = Math.random() < 0.08 ? 90 : 28;
+        setTimeout(typeLine, delay);
       } else {
         currentText += "\n";
         lineIndex++;
         charIndex = 0;
-        terminal.innerHTML = currentText + '<span class="cursor">|</span>';
-        setTimeout(typeLine, 250);
+        renderText();
+        setTimeout(typeLine, 240);
       }
     }
+
+    document.addEventListener("click", function initAudioOnce() {
+      startTypingAudio();
+      typingAudio.pause();
+      typingAudio.currentTime = 0;
+      document.removeEventListener("click", initAudioOnce);
+    });
 
     typeLine();
   </script>
