@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACCC System Access — Layer 1</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <main class="container">
+    <header class="panel hero compact">
+      <p class="eyebrow">VERIFICATION LAYER 1 OF 5</p>
+      <h1>Market Concentration Check</h1>
+      <p class="lede">
+        The model requires confirmation of a concentration metric before releasing the next fragment.
+      </p>
+    </header>
+
+    <section class="panel">
+      <p class="mono" style="color:#ff6b6b;">
+        SYSTEM NOTE: VERIFY MARKET STRUCTURE
+      </p>
+
+      <div class="data-card mono">
+Firm A: 50%<br>
+Firm B: 30%<br>
+Firm C: 20%
+      </div>
+
+      <p>
+        Calculate the Herfindahl–Hirschman Index (HHI).
+      </p>
+
+      <p>
+        Enter the result as a whole number (no commas).
+      </p>
+
+      <label for="answer" class="label">HHI value</label>
+      <div class="answer-row">
+        <input id="answer" type="text" autocomplete="off" placeholder="Enter HHI" />
+        <button id="submitBtn">Submit</button>
+      </div>
+
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+
+      <details class="hint-box">
+        <summary>Need a hint?</summary>
+        <p>Square each share and sum them: 50² + 30² + 20².</p>
+      </details>
+    </section>
+
+    <section class="panel">
+      <p class="mono" style="opacity:0.2;">
+        the model prefers concentrated structures
+      </p>
+    </section>
+  </main>
+
+  <script src="common.js"></script>
+  <script>
+    setupPuzzle({
+      acceptedAnswers: ["3800"],
+      normalize: function (val) {
+        return String(val).trim();
+      },
+      nextPage: "puzzle2.html",
+      keyword: "AI",
+      feedbackEl: "feedback",
+      inputEl: "answer",
+      submitEl: "submitBtn"
+    });
+  </script>
+</body>
+</html>
