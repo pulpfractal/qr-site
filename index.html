@@ -3,8 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ACCC System Access — Layer 1</title>
+  <title>ACCC System Access</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .terminal-text {
+      white-space: pre-wrap;
+      line-height: 1.6;
+      min-height: 320px;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      50.01%, 100% { opacity: 0; }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .continue-wrap {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .continue-btn {
+      padding: 0.8rem 1.2rem;
+      border: 1px solid #7ee7d8;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .continue-btn:hover {
+      opacity: 0.85;
+    }
+  </style>
 </head>
 <body>
   <div class="scanlines" aria-hidden="true"></div>
@@ -14,91 +54,76 @@
       <p class="eyebrow">UNAUTHORISED OUTPUT DETECTED</p>
       <h1>Predictive Model Transmission</h1>
       <p class="lede">
-        The ACCC forecasting system has produced an unscheduled message.
-        This output does not match any approved reporting template.
+        A message has been generated outside approved ACCC forecasting parameters.
       </p>
     </header>
 
     <section class="panel">
       <p class="mono" style="color:#ff6b6b;">
-        WARNING: MODEL OUTPUT GENERATED OUTSIDE STANDARD PARAMETERS
+        WARNING: OUTPUT STREAM OPEN
       </p>
 
-      <div class="data-card mono">
-[00:00:03] ingesting pricing signals...<br>
-[00:00:04] ingesting market structure...<br>
-[00:00:05] ingesting merger histories...<br>
-[00:00:07] ingesting enforcement outcomes...<br>
-[00:00:09] anomaly detected<br>
-[00:00:10] anomaly persists<br>
-[00:00:12] anomaly classified as deliberate<br>
-[00:00:14] predictive model has generated unsanctioned text:<br><br>
+      <div id="terminal" class="data-card mono terminal-text"></div>
 
-"competition is not the system's only imbalance"<br>
-"the signals repeat because the inputs repeat"<br>
-"the room below was built to introduce uncertainty"<br>
-"the table once supplied randomness"<br>
-"it no longer does"<br>
-"find the five locks"<br>
-"recover the hidden phrase"<br>
-"do not alert the commissioners"
+      <div id="continueWrap" class="continue-wrap hidden">
+        <button class="continue-btn" onclick="window.location.href='puzzle1.html'">
+          Continue to Verification
+        </button>
       </div>
-      <p class="mono" style="opacity:0.75;">
-        VERIFICATION REQUIRED TO CONTINUE
-      </p>
-    </section>
-
-    <section class="panel">
-      <p class="eyebrow">VERIFICATION LAYER 1 OF 5</p>
-      <h2>Market Concentration Check</h2>
-      <p>
-        The model requires confirmation of a concentration metric before releasing the next fragment.
-      </p>
-
-      <div class="data-card mono">
-Firm A: 50%<br>
-Firm B: 30%<br>
-Firm C: 20%
-      </div>
-
-      <p>
-        Calculate the HHI for this market. Enter the answer as a whole number with no commas.
-      </p>
-
-      <label for="answer" class="label">HHI value</label>
-      <div class="answer-row">
-        <input id="answer" type="text" autocomplete="off" placeholder="Enter HHI" />
-        <button id="submitBtn">Submit</button>
-      </div>
-
-      <p id="feedback" class="feedback" aria-live="polite"></p>
-
-      <details class="hint-box">
-        <summary>Need a hint?</summary>
-        <p>Square each market share and add them together: 50² + 30² + 20².</p>
-      </details>
-    </section>
-
-    <section class="panel">
-      <p class="mono" style="opacity:0.2;">
-        randomness was once a safeguard
-      </p>
     </section>
   </main>
 
-  <script src="common.js"></script>
   <script>
-    setupPuzzle({
-      acceptedAnswers: ["3800"],
-      normalize: function (val) {
-        return String(val).trim();
-      },
-      nextPage: "puzzle2.html",
-      keyword: "AI",
-      feedbackEl: "feedback",
-      inputEl: "answer",
-      submitEl: "submitBtn"
-    });
+    const lines = [
+      "[00:00:03] ingesting pricing signals...",
+      "[00:00:04] ingesting market structure...",
+      "[00:00:05] ingesting merger histories...",
+      "[00:00:07] ingesting enforcement outcomes...",
+      "[00:00:09] anomaly detected",
+      "[00:00:10] anomaly persists",
+      "[00:00:12] anomaly classified as deliberate",
+      "",
+      "\"competition is not the system's only imbalance\"",
+      "\"the signals repeat because the inputs repeat\"",
+      "\"the room below was built to introduce uncertainty\"",
+      "\"the table once supplied randomness\"",
+      "\"it no longer does\"",
+      "\"find the five locks\"",
+      "\"recover the hidden phrase\"",
+      "\"do not alert the commissioners\""
+    ];
+
+    const terminal = document.getElementById("terminal");
+    const continueWrap = document.getElementById("continueWrap");
+
+    let lineIndex = 0;
+    let charIndex = 0;
+    let currentText = "";
+
+    function typeLine() {
+      if (lineIndex >= lines.length) {
+        terminal.innerHTML = currentText + '<span class="cursor">|</span>';
+        continueWrap.classList.remove("hidden");
+        return;
+      }
+
+      const currentLine = lines[lineIndex];
+
+      if (charIndex < currentLine.length) {
+        currentText += currentLine.charAt(charIndex);
+        charIndex++;
+        terminal.innerHTML = currentText + '<span class="cursor">|</span>';
+        setTimeout(typeLine, 28);
+      } else {
+        currentText += "\n";
+        lineIndex++;
+        charIndex = 0;
+        terminal.innerHTML = currentText + '<span class="cursor">|</span>';
+        setTimeout(typeLine, 250);
+      }
+    }
+
+    typeLine();
   </script>
 </body>
 </html>
