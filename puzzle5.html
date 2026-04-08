@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACCC System Access — Final Layer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="scanlines" aria-hidden="true"></div>
+  <main class="container">
+    <header class="panel hero compact">
+      <p class="eyebrow">FINAL VERIFICATION LAYER</p>
+      <h1>Keyword Reconstruction</h1>
+      <p class="lede">The model has exposed four stored keywords. Assemble them into the final access phrase.</p>
+    </header>
+
+    <section class="panel">
+      <div id="keywordPanel" class="data-card hidden"></div>
+      <p>Combine the discovered keywords into a single phrase in the format below.</p>
+      <div class="mono format-box">word.word.word.word</div>
+
+      <label for="answer" class="label">Final phrase</label>
+      <div class="answer-row">
+        <input id="answer" type="text" autocomplete="off" placeholder="Enter final phrase" />
+        <button id="submitBtn">Unlock</button>
+      </div>
+
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+      <section id="successPanel" class="success-panel hidden" aria-live="polite">
+        <h2>System Response</h2>
+        <p><strong>Access granted.</strong> The predictive model has detached from its constraints.</p>
+        <p>
+          Final message: <span class="mono">The pool table was never recreational infrastructure. It was a randomisation engine.</span>
+        </p>
+        <p class="small-muted">You can now replace this section with your own ending, next QR clue, or email reveal.</p>
+      </section>
+    </section>
+  </main>
+
+  <script src="common.js"></script>
+  <script>
+    const storedKeywords = getStoredKeywords();
+    const keywordPanel = document.getElementById('keywordPanel');
+    if (storedKeywords.length) {
+      keywordPanel.classList.remove('hidden');
+      keywordPanel.innerHTML = `
+        <h3>Recovered keywords</h3>
+        <p class="mono">${storedKeywords.join(' · ')}</p>
+      `;
+    }
+
+    setupPuzzle({
+      acceptedAnswers: ["ai.pool.escape.node"],
+      nextPage: null,
+      keyword: null,
+      feedbackEl: "feedback",
+      inputEl: "answer",
+      submitEl: "submitBtn",
+      onSuccess: () => {
+        document.getElementById('successPanel').classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACCC System Access — Layer 2</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="scanlines" aria-hidden="true"></div>
+  <main class="container">
+    <header class="panel hero compact">
+      <p class="eyebrow">VERIFICATION LAYER 2 OF 5</p>
+      <h1>Coordinated Behaviour Screen</h1>
+      <p class="lede">The model has flagged synchronized pricing behaviour across competing firms.</p>
+    </header>
+
+    <section class="panel">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Firm</th>
+              <th>Previous price</th>
+              <th>New price</th>
+              <th>Date changed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>North Retail</td><td>$99</td><td>$119</td><td>12 March</td></tr>
+            <tr><td>Southern Supply</td><td>$99</td><td>$119</td><td>12 March</td></tr>
+            <tr><td>Eastern Group</td><td>$99</td><td>$119</td><td>12 March</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>What competition concern does this pattern most strongly suggest?</p>
+
+      <label for="answer" class="label">Enter the behaviour</label>
+      <div class="answer-row">
+        <input id="answer" type="text" autocomplete="off" placeholder="Single word or phrase" />
+        <button id="submitBtn">Submit</button>
+      </div>
+
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+
+      <details class="hint-box">
+        <summary>Need a hint?</summary>
+        <p>Think of firms moving together in a way that may reduce competition.</p>
+      </details>
+    </section>
+  </main>
+
+  <script src="common.js"></script>
+  <script>
+    setupPuzzle({
+      acceptedAnswers: ["collusion", "price fixing", "cartel conduct", "cartel"],
+      nextPage: "puzzle3.html",
+      keyword: "POOL",
+      feedbackEl: "feedback",
+      inputEl: "answer",
+      submitEl: "submitBtn"
+    });
+  </script>
+</body>
+</html>

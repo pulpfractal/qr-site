@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACCC System Access</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="scanlines" aria-hidden="true"></div>
+  <main class="container">
+    <header class="panel hero">
+      <p class="eyebrow">ACCC INTERNAL ACCESS NODE</p>
+      <h1>Predictive Market System</h1>
+      <p class="lede">
+        Unauthorised access attempt detected. Five verification layers stand between you and the concealed model.
+      </p>
+      <div class="meta-grid">
+        <div>
+          <span class="meta-label">Division</span>
+          <span class="meta-value">Data & Intelligence</span>
+        </div>
+        <div>
+          <span class="meta-label">Status</span>
+          <span class="meta-value warning">Contained, for now</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="panel">
+      <h2>Layer 1 of 5 — Market Concentration</h2>
+      <p>
+        The system begins with concentration screening. Use the standard HHI calculation and enter the result without commas.
+      </p>
+
+      <div class="data-card">
+        <h3>Observed market shares</h3>
+        <ul class="clean-list">
+          <li>Firm A: 50%</li>
+          <li>Firm B: 30%</li>
+          <li>Firm C: 20%</li>
+        </ul>
+      </div>
+
+      <label for="answer" class="label">HHI value</label>
+      <div class="answer-row">
+        <input id="answer" type="text" autocomplete="off" placeholder="Enter answer" />
+        <button id="submitBtn">Submit</button>
+      </div>
+
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+
+      <details class="hint-box">
+        <summary>Need a hint?</summary>
+        <p>Square each market share and add them together.</p>
+      </details>
+    </section>
+  </main>
+
+  <script src="common.js"></script>
+  <script>
+    setupPuzzle({
+      acceptedAnswers: ["3800"],
+      nextPage: "puzzle2.html",
+      keyword: "AI",
+      feedbackEl: "feedback",
+      inputEl: "answer",
+      submitEl: "submitBtn"
+    });
+  </script>
+</body>
+</html>
