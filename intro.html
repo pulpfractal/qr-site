@@ -3,177 +3,178 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ACCC System Access</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Choose Your Path</title>
+
   <style>
-    .terminal-text {
-      white-space: pre-wrap;
-      line-height: 1.6;
-      min-height: 320px;
+    :root {
+      --teal: #20d6c7;
+      --purple: #8d5cff;
+      --navy: #020817;
+      --panel: rgba(3, 18, 32, 0.78);
+      --text: #d7fff9;
+      --muted: #9ccdc8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(32, 214, 199, 0.22), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(141, 92, 255, 0.28), transparent 30%),
+        radial-gradient(circle at 50% 90%, rgba(32, 214, 199, 0.14), transparent 35%),
+        linear-gradient(135deg, #020817 0%, #041b2d 38%, #180a2e 70%, #031f2d 100%);
+      overflow-x: hidden;
+    }
+
+    .scanlines {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.025),
+        rgba(255,255,255,0.025) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+      opacity: 0.45;
+    }
+
+    .container {
+      width: min(1050px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 4rem 0;
       position: relative;
+      z-index: 1;
     }
 
-    .cursor {
-      display: inline-block;
-      width: 10px;
-      animation: blink 0.8s infinite;
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(32, 214, 199, 0.25);
+      border-radius: 18px;
+      padding: 1.5rem;
+      box-shadow:
+        0 0 35px rgba(32, 214, 199, 0.08),
+        0 0 55px rgba(141, 92, 255, 0.08);
+      backdrop-filter: blur(10px);
     }
 
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      50.01%, 100% { opacity: 0; }
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .continue-wrap,
-    .start-wrap {
-      margin-top: 1.5rem;
+    .hero {
       text-align: center;
+      margin-bottom: 1.5rem;
     }
 
-    .continue-btn,
-    .start-btn {
-      padding: 0.8rem 1.2rem;
-      border: 1px solid #7ee7d8;
-      background: transparent;
-      color: inherit;
-      cursor: pointer;
-      font: inherit;
-      letter-spacing: 0.08em;
+    .eyebrow {
+      margin: 0 0 0.7rem;
+      color: var(--teal);
+      font-family: monospace;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
+      font-size: 0.85rem;
     }
 
-    .continue-btn:hover,
-    .start-btn:hover {
-      opacity: 0.85;
-      box-shadow: 0 0 12px rgba(126, 231, 216, 0.25);
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4rem);
+      letter-spacing: 0.04em;
     }
 
-    .warning-text {
-      color: #ff6b6b;
-      margin-bottom: 1rem;
+    .lede {
+      color: var(--muted);
+      margin: 1rem auto 0;
+      max-width: 680px;
+      line-height: 1.6;
+    }
+
+    .path-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+    }
+
+    .path-card {
+      min-height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      text-decoration: none;
+      color: var(--text);
+      padding: 1rem;
+      border-radius: 16px;
+      border: 1px solid rgba(32, 214, 199, 0.28);
+      background: rgba(2, 8, 23, 0.55);
+      box-shadow: 0 0 18px rgba(141, 92, 255, 0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .path-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(32, 214, 199, 0.75);
+      box-shadow:
+        0 0 18px rgba(32, 214, 199, 0.18),
+        0 0 28px rgba(141, 92, 255, 0.16);
+    }
+
+    @media (max-width: 950px) {
+      .path-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .path-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .path-card {
+        min-height: 120px;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="scanlines" aria-hidden="true"></div>
 
   <main class="container">
     <header class="panel hero">
-      <p class="eyebrow">UNAUTHORISED OUTPUT DETECTED</p>
-      <h1>Predictive Model Transmission</h1>
+      <p class="eyebrow">Choose carefully</p>
+      <h1>Five Locks Remain</h1>
       <p class="lede">
-        A message has been generated outside approved ACCC forecasting parameters.
+        Each path contains a fragment. Recover them all.
       </p>
     </header>
 
-    <section class="panel">
-      <p class="mono warning-text">
-        WARNING: OUTPUT STREAM OPEN
-      </p>
+    <section class="path-grid">
+      <a class="path-card" href="dau.html">
+        If you torture the data long enough, it will confess to anything
+      </a>
 
-      <div id="terminal" class="data-card mono terminal-text"></div>
+      <a class="path-card" href="infocenter.html">
+        Never doubt that a small group of thoughtful, committed citizens can change the world
+      </a>
 
-      <div id="startWrap" class="start-wrap">
-        <button id="startBtn" class="start-btn">Tap to Begin</button>
-      </div>
+      <a class="path-card" href="intelligence.html">
+        The true sign of intelligence is not knowledge but imagination
+      </a>
 
-      <div id="continueWrap" class="continue-wrap hidden">
-        <button class="continue-btn" onclick="window.location.href='puzzle1.html'">
-          Continue to Verification
-        </button>
-      </div>
+      <a class="path-card" href="data-strategy.html">
+        The essence of strategy is choosing what not to do
+      </a>
+
+      <a class="path-card" href="lts.html">
+        Without records, there is no accountability
+      </a>
     </section>
   </main>
-
-  <audio id="typingAudio" preload="auto" playsinline>
-    <source src="typing.mp3" type="audio/mpeg" />
-  </audio>
-
-  <script>
-    const lines = [
-      "[00:00:03] ingesting pricing signals...",
-      "[00:00:04] ingesting market structure...",
-      "[00:00:05] ingesting merger histories...",
-      "[00:00:07] ingesting enforcement outcomes...",
-      "[00:00:09] anomaly detected",
-      "[00:00:10] anomaly persists",
-      "[00:00:12] anomaly classified as deliberate",
-      "",
-      "\"competition is not the system's only imbalance\"",
-      "\"the signals repeat because the inputs repeat\"",
-      "\"the room below was built to introduce uncertainty\"",
-      "\"the table once supplied randomness\"",
-      "\"it no longer does\"",
-      "\"find the five locks\"",
-      "\"recover the hidden phrase\"",
-      "\"do not alert the commissioners\""
-    ];
-
-    const terminal = document.getElementById("terminal");
-    const continueWrap = document.getElementById("continueWrap");
-    const startWrap = document.getElementById("startWrap");
-    const startBtn = document.getElementById("startBtn");
-    const typingAudio = document.getElementById("typingAudio");
-
-    let lineIndex = 0;
-    let charIndex = 0;
-    let currentText = "";
-    let audioEnabled = false;
-
-    function renderText() {
-      terminal.innerHTML = currentText + '<span class="cursor">|</span>';
-    }
-
-    function tryStartAudio() {
-      typingAudio.volume = 0.12;
-      typingAudio.currentTime = 0;
-      typingAudio.play().then(() => {
-        audioEnabled = true;
-      }).catch(() => {
-        audioEnabled = false;
-      });
-    }
-
-    function stopAudio() {
-      typingAudio.pause();
-      typingAudio.currentTime = 0;
-    }
-
-    function typeLine() {
-      if (lineIndex >= lines.length) {
-        renderText();
-        stopAudio();
-        continueWrap.classList.remove("hidden");
-        return;
-      }
-
-      const currentLine = lines[lineIndex];
-
-      if (charIndex < currentLine.length) {
-        currentText += currentLine.charAt(charIndex);
-        charIndex++;
-        renderText();
-
-        const delay = Math.random() < 0.08 ? 90 : 28;
-        setTimeout(typeLine, delay);
-      } else {
-        currentText += "\n";
-        lineIndex++;
-        charIndex = 0;
-        renderText();
-        setTimeout(typeLine, 240);
-      }
-    }
-
-    startBtn.addEventListener("click", function () {
-      startWrap.classList.add("hidden");
-      tryStartAudio();
-      typeLine();
-    });
-  </script>
 </body>
 </html>
