@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DAU Puzzle 6</title>
+
+  <style>
+    :root {
+      --teal: #20d6c7;
+      --purple: #8d5cff;
+      --panel: rgba(3, 18, 32, 0.78);
+      --text: #d7fff9;
+      --danger: #ff6b9a;
+      --muted: #9ccdc8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(32, 214, 199, 0.22), transparent 28%),
+        radial-gradient(circle at 85% 15%, rgba(141, 92, 255, 0.28), transparent 30%),
+        radial-gradient(circle at 50% 90%, rgba(32, 214, 199, 0.14), transparent 35%),
+        linear-gradient(135deg, #020817 0%, #041b2d 38%, #180a2e 70%, #031f2d 100%);
+    }
+
+    .scanlines {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.025),
+        rgba(255,255,255,0.025) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+      opacity: 0.45;
+    }
+
+    .container {
+      width: min(900px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 3rem 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid rgba(32, 214, 199, 0.25);
+      border-radius: 18px;
+      padding: 2rem;
+      box-shadow:
+        0 0 35px rgba(32, 214, 199, 0.08),
+        0 0 55px rgba(141, 92, 255, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .intro {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .code-block {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(32, 214, 199, 0.2);
+      border-radius: 12px;
+      padding: 1.2rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      line-height: 1.5;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    input {
+      width: 100%;
+      max-width: 300px;
+      display: block;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.24);
+      border: 1px solid rgba(32, 214, 199, 0.28);
+      color: var(--text);
+      padding: 0.8rem;
+      font: inherit;
+      border-radius: 8px;
+      outline: none;
+      text-align: center;
+    }
+
+    input:focus {
+      border-color: rgba(141, 92, 255, 0.8);
+      box-shadow: 0 0 10px rgba(141, 92, 255, 0.18);
+    }
+
+    button {
+      margin: 1.2rem auto 0;
+      display: block;
+      padding: 0.8rem 1.3rem;
+      border: 1px solid var(--teal);
+      background: rgba(32, 214, 199, 0.06);
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 8px;
+    }
+
+    button:hover {
+      box-shadow: 0 0 16px rgba(32, 214, 199, 0.25);
+    }
+
+    .feedback {
+      margin-top: 1rem;
+      min-height: 1.4rem;
+      color: var(--danger);
+      font-family: monospace;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scanlines"></div>
+
+  <main class="container">
+    <section class="panel">
+      <div class="intro">
+        You have done well to get this far, but your R and python won't save you here
+      </div>
+
+      <div class="code-block">
+using System;
+using System.Collections.Generic;
+
+public class SequenceExample
+{
+    public static List&lt;int&gt; GenerateSequence(int n)
+    {
+        var sequence = new List&lt;int&gt;();
+
+        if (n &lt;= 0) return sequence;
+
+        sequence.Add(0);
+        if (n == 1) return sequence;
+
+        sequence.Add(1);
+
+        for (int i = 2; i &lt; n; i++)
+        {
+            int next = sequence[i - 1] + sequence[i - 2];
+            sequence.Add(next);
+        }
+
+        return sequence;
+    }
+
+    public static void Main()
+    {
+        var result = GenerateSequence(10);
+        Console.WriteLine(string.Join(", ", result));
+    }
+}
+      </div>
+
+      <input id="answerInput" type="text" placeholder="10th number in the sequence">
+
+      <button id="submitBtn">Submit</button>
+      <p id="feedback" class="feedback"></p>
+    </section>
+  </main>
+
+  <script>
+    const input = document.getElementById("answerInput");
+    const feedback = document.getElementById("feedback");
+    const submitBtn = document.getElementById("submitBtn");
+
+    function checkAnswer() {
+      const value = input.value.trim();
+
+      if (value === "34") {
+        feedback.style.color = "#20d6c7";
+        feedback.textContent = "Correct.";
+
+        // change destination if needed
+        setTimeout(() => {
+          window.location.href = "all-finale.html";
+        }, 1000);
+
+        return;
+      }
+
+      feedback.style.color = "#ff6b9a";
+      feedback.textContent = "Incorrect. Sequence logic failure.";
+    }
+
+    submitBtn.addEventListener("click", checkAnswer);
+
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        checkAnswer();
+      }
+    });
+  </script>
+</body>
+</html>
